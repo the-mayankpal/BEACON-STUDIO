@@ -1,4 +1,4 @@
-import { motion, useScroll, useSpring, useTransform, type MotionValue } from 'motion/react';
+import { motion } from 'motion/react';
 import { useEffect, useRef, useState } from 'react';
 import { PaintBrush, Chats, Lightning, ShieldCheck } from '@phosphor-icons/react';
 
@@ -50,39 +50,23 @@ function WhyUsCard({
   feature,
   index,
   isMobile,
-  scrollYProgress,
 }: {
   feature: Feature;
   index: number;
   isMobile: boolean;
-  scrollYProgress: MotionValue<number>;
 }) {
-  const start = Math.min(0.8, index * 0.18);
-  const end = Math.min(1, start + 0.2);
-
-  const mobileY = useSpring(
-    useTransform(scrollYProgress, [start, end], [56, 0]),
-    { stiffness: 140, damping: 24, mass: 0.35 }
-  );
-  const mobileScale = useSpring(
-    useTransform(scrollYProgress, [start, end], [0.97, 1]),
-    { stiffness: 140, damping: 24, mass: 0.35 }
-  );
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-      className={`group relative rounded-[2rem] overflow-hidden flex flex-col justify-between p-8 md:p-10 ${feature.className} border border-white/10 ${
+      initial={isMobile ? false : { opacity: 0, y: 30 }}
+      whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
+      viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
+      transition={isMobile ? undefined : { duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className={`group relative rounded-[2rem] overflow-hidden flex flex-col justify-between min-h-[24rem] md:min-h-0 p-8 md:p-10 ${feature.className} border border-white/10 ${
         index % 2 === 0 ? 'bg-[#E85D34]' : 'bg-[#C83A22]'
       } ${isMobile ? 'sticky' : ''}`}
       style={{
         zIndex: index + 1,
         top: isMobile ? `calc(86px + ${index * 20}px)` : undefined,
-        y: isMobile ? mobileY : 0,
-        scale: isMobile ? mobileScale : 1,
       }}
     >
       {/* HEATMAP MESH GRADIENT — Alternating between Brand Orange and Deep Reddish Orange */}
@@ -163,10 +147,6 @@ export default function WhyUsSection() {
   */
   const sectionRef = useRef<HTMLElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 767px)");
@@ -235,14 +215,13 @@ export default function WhyUsSection() {
           </p>
         </motion.div>
 
-        <div className="relative flex flex-col md:grid md:grid-cols-3 md:auto-rows-[minmax(320px,auto)] gap-8 mt-12 md:mt-0 pb-20 md:pb-0">
+        <div className="relative flex flex-col md:grid md:grid-cols-3 md:auto-rows-[minmax(320px,auto)] gap-8 mt-12 md:mt-0 pb-[42vh] md:pb-0">
           {FEATURES.map((feature, index) => (
             <WhyUsCard
               key={feature.id}
               feature={feature}
               index={index}
               isMobile={isMobile}
-              scrollYProgress={scrollYProgress}
             />
           ))}
         </div>
