@@ -1,7 +1,17 @@
-import { motion } from 'motion/react';
+import { motion, useScroll, useSpring, useTransform, type MotionValue } from 'motion/react';
+import { useEffect, useRef, useState } from 'react';
 import { PaintBrush, Chats, Lightning, ShieldCheck } from '@phosphor-icons/react';
 
-const FEATURES = [
+type Feature = {
+  id: string;
+  title: string;
+  body: string;
+  ctas: string[];
+  icon: any;
+  className: string;
+};
+
+const FEATURES: Feature[] = [
   {
     id: "01",
     title: "Built for your business, not a template",
@@ -36,12 +46,139 @@ const FEATURES = [
   }
 ];
 
+function WhyUsCard({
+  feature,
+  index,
+  isMobile,
+  scrollYProgress,
+}: {
+  feature: Feature;
+  index: number;
+  isMobile: boolean;
+  scrollYProgress: MotionValue<number>;
+}) {
+  const start = Math.min(0.8, index * 0.18);
+  const end = Math.min(1, start + 0.2);
+
+  const mobileY = useSpring(
+    useTransform(scrollYProgress, [start, end], [56, 0]),
+    { stiffness: 140, damping: 24, mass: 0.35 }
+  );
+  const mobileScale = useSpring(
+    useTransform(scrollYProgress, [start, end], [0.97, 1]),
+    { stiffness: 140, damping: 24, mass: 0.35 }
+  );
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      className={`group relative rounded-[2rem] overflow-hidden flex flex-col justify-between p-8 md:p-10 ${feature.className} border border-white/10 ${
+        index % 2 === 0 ? 'bg-[#E85D34]' : 'bg-[#C83A22]'
+      } ${isMobile ? 'sticky' : ''}`}
+      style={{
+        zIndex: index + 1,
+        top: isMobile ? `calc(86px + ${index * 20}px)` : undefined,
+        y: isMobile ? mobileY : 0,
+        scale: isMobile ? mobileScale : 1,
+      }}
+    >
+      {/* HEATMAP MESH GRADIENT — Alternating between Brand Orange and Deep Reddish Orange */}
+      <div className="absolute inset-0 z-0">
+        <div className={`absolute inset-0 opacity-100 bg-gradient-to-br ${
+          index % 2 === 0
+            ? 'from-[#E85D34] via-[#D14D2A] to-[#E85D34]'
+            : 'from-[#C83A22] via-[#A82A1A] to-[#C83A22]'
+        }`} />
+
+        {/* Secondary Pulsing Heat Surface */}
+        <motion.div
+          animate={{
+            opacity: [0.3, 0.6, 0.3],
+            scale: [1, 1.2, 1],
+            x: index % 2 === 0 ? [0, 50, 0] : [0, -50, 0]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className={`absolute -top-1/4 ${index % 2 === 0 ? '-right-1/4' : '-left-1/4'} w-[150%] h-[150%] bg-gradient-radial from-[#F2A65A]/40 to-transparent blur-[100px]`}
+        />
+
+        {/* Dark Depth Spot */}
+        <motion.div
+          animate={{
+            opacity: [0.4, 0.2, 0.4],
+            scale: [0.8, 1.1, 0.8]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: index * 2 }}
+          className="absolute bottom-[-10%] left-[-10%] w-[80%] h-[80%] bg-black/40 blur-[80px] rounded-full"
+        />
+
+        {/* Subtle Grain Texture */}
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none mix-blend-overlay"
+          style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
+        />
+      </div>
+
+      {/* Top Section: Icon & ID */}
+      <div className="flex justify-between items-start mb-12 relative z-10">
+        <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-all duration-500">
+          <feature.icon className="w-6 h-6 text-white" weight="duotone" />
+        </div>
+        <span className="font-mono text-sm text-white/40">
+          {feature.id}
+        </span>
+      </div>
+
+      {/* Bottom Section: Content */}
+      <div className="relative z-10">
+        <h3 className="text-2xl md:text-3xl font-heading font-extrabold tracking-tight text-white mb-4">
+          {feature.title}
+        </h3>
+        <p className="text-white/80 text-sm md:text-base font-light leading-relaxed mb-8">
+          {feature.body}
+        </p>
+
+        {/* Tags */}
+        {feature.ctas && feature.ctas.length > 0 && (
+          <div className="flex flex-wrap gap-2">
+            {feature.ctas.map(cta => (
+              <span
+                key={cta}
+                className="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/90 text-[10px] md:text-xs tracking-wider uppercase backdrop-blur-sm"
+              >
+                {cta}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 export default function WhyUsSection() {
   /* --- WHY US SECTION --- 
      Value proposition and unique selling points.
   */
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end end"],
+  });
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+    updateIsMobile();
+    mediaQuery.addEventListener("change", updateIsMobile);
+    return () => mediaQuery.removeEventListener("change", updateIsMobile);
+  }, []);
+
   return (
     <motion.section 
+      ref={sectionRef}
       id="why" 
       className="relative py-32 bg-black border-t border-white/5"
       initial={{ opacity: 0 }}
@@ -98,92 +235,15 @@ export default function WhyUsSection() {
           </p>
         </motion.div>
 
-        <div className="relative flex flex-col md:grid md:grid-cols-3 md:auto-rows-[minmax(320px,auto)] gap-8 mt-12 md:mt-0">
+        <div className="relative flex flex-col md:grid md:grid-cols-3 md:auto-rows-[minmax(320px,auto)] gap-8 mt-12 md:mt-0 pb-20 md:pb-0">
           {FEATURES.map((feature, index) => (
-            <motion.div
+            <WhyUsCard
               key={feature.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className={`group relative rounded-[2rem] overflow-hidden flex flex-col justify-between p-8 md:p-10 ${feature.className} border border-white/10 ${
-                index % 2 === 0 ? 'bg-[#E85D34]' : 'bg-[#C83A22]'
-              }
-              `}
-              style={{ 
-                zIndex: index,
-              } as any}
-            >
-              {/* HEATMAP MESH GRADIENT — Alternating between Brand Orange and Deep Reddish Orange */}
-              <div className="absolute inset-0 z-0">
-                <div className={`absolute inset-0 opacity-100 bg-gradient-to-br ${
-                  index % 2 === 0 
-                  ? 'from-[#E85D34] via-[#D14D2A] to-[#E85D34]' 
-                  : 'from-[#C83A22] via-[#A82A1A] to-[#C83A22]'
-                }`} />
-                
-                {/* Secondary Pulsing Heat Surface */}
-                <motion.div 
-                  animate={{
-                    opacity: [0.3, 0.6, 0.3],
-                    scale: [1, 1.2, 1],
-                    x: index % 2 === 0 ? [0, 50, 0] : [0, -50, 0]
-                  }}
-                  transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                  className={`absolute -top-1/4 ${index % 2 === 0 ? '-right-1/4' : '-left-1/4'} w-[150%] h-[150%] bg-gradient-radial from-[#F2A65A]/40 to-transparent blur-[100px]`} 
-                />
-
-                {/* Dark Depth Spot */}
-                <motion.div 
-                  animate={{
-                    opacity: [0.4, 0.2, 0.4],
-                    scale: [0.8, 1.1, 0.8]
-                  }}
-                  transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: index * 2 }}
-                  className="absolute bottom-[-10%] left-[-10%] w-[80%] h-[80%] bg-black/40 blur-[80px] rounded-full" 
-                />
-
-                {/* Subtle Grain Texture */}
-                <div className="absolute inset-0 opacity-[0.05] pointer-events-none mix-blend-overlay" 
-                  style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}
-                />
-              </div>
-
-
-              {/* Top Section: Icon & ID */}
-              <div className="flex justify-between items-start mb-12 relative z-10">
-                <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center group-hover:bg-white/20 transition-all duration-500">
-                  <feature.icon className="w-6 h-6 text-white" weight="duotone" />
-                </div>
-                <span className="font-mono text-sm text-white/40">
-                  {feature.id}
-                </span>
-              </div>
-
-              {/* Bottom Section: Content */}
-              <div className="relative z-10">
-                <h3 className="text-2xl md:text-3xl font-heading font-extrabold tracking-tight text-white mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-white/80 text-sm md:text-base font-light leading-relaxed mb-8">
-                  {feature.body}
-                </p>
-
-                {/* Tags */}
-                {feature.ctas && feature.ctas.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {feature.ctas.map(cta => (
-                      <span 
-                        key={cta} 
-                        className="px-3 py-1.5 rounded-full border border-white/10 bg-white/5 text-white/90 text-[10px] md:text-xs tracking-wider uppercase backdrop-blur-sm"
-                      >
-                        {cta}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </motion.div>
+              feature={feature}
+              index={index}
+              isMobile={isMobile}
+              scrollYProgress={scrollYProgress}
+            />
           ))}
         </div>
 
