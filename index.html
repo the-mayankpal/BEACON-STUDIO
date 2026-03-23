@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BEACON Studio | Premium Digital Agency & Elite AI Automation</title>
+    <meta name="description" content="BEACON Studio engineers bespoke digital obsessions. High-performance websites, technical dashboards, and custom AI automation agents for ambitious businesses." />
+    <meta name="keywords" content="premium digital agency, AI automation studio, custom business dashboards, bespoke web development, AI agents for business, high-end UI/UX design, BEACON Studio" />
+    <meta name="author" content="BEACON Studio" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="canonical" href="https://beaconstudio.io" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://beaconstudio.io/" />
+    <meta property="og:title" content="BEACON Studio | Premium Digital Agency & Elite AI Automation" />
+    <meta property="og:description" content="We engineer digital obsessions. Bespoke websites and intelligent AI automation built for the next generation of business." />
+    <meta property="og:image" content="https://beaconstudio.io/og-image.jpg" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://beaconstudio.io/" />
+    <meta property="twitter:title" content="BEACON Studio | Premium Digital Agency & Elite AI Automation" />
+    <meta property="twitter:description" content="We engineer digital obsessions. Bespoke websites and intelligent AI automation agents." />
+    <meta property="twitter:image" content="https://beaconstudio.io/og-image.jpg" />
+    
+    <!-- Preload Critical Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Roboto+Mono:wght@400;500&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,500&display=swap" rel="stylesheet" />
+
+    <style>
+      /* Premium Initial State Loader ensures no flash of unstyled content */
+      #initial-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 999999;
+        background: #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+      }
+      .loader-hidden {
+        opacity: 0;
+        transform: scale(1.05);
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .loader-text {
+        font-family: 'Inter', sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.4em;
+        text-transform: uppercase;
+        color: rgba(255, 255, 255, 0.5);
+        animation: pulse 2s infinite ease-in-out;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 0.3; }
+        50% { opacity: 0.8; text-shadow: 0 0 20px rgba(255,255,255,0.2); }
+      }
+      body {
+        background-color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Persistent Preloader covering viewport -->
+    <div id="initial-loader">
+      <div class="loader-text">Loading Experience</div>
+    </div>
+    
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Vanilla script to clear it once natively booted up -->
+    <script>
+      window.addEventListener('load', () => {
+        // Enforce brief minimum display time for premium feel and to let react settle
+        setTimeout(() => {
+          document.getElementById('initial-loader').classList.add('loader-hidden');
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>
+

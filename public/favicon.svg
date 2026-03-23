@@ -1,0 +1,44 @@
+<svg width="64" height="64" viewBox="38 38 204 204" xmlns="http://www.w3.org/2000/svg">
+  <!-- Brand Identity Favicon - Monochrome White -->
+  <g stroke-linejoin="round" stroke-linecap="round" stroke="#FFFFFF" fill="none">
+    <!-- Center Hexagon -->
+    <polygon
+      points="164.24,154 140,168 115.75,154 115.75,126 140,112 164.24,126"
+      stroke-width="9"
+    />
+
+    <!-- Arms + Tips -->
+    <!-- North -->
+    <line x1="140" y1="110" x2="140" y2="73" stroke-width="8.5" />
+    <polygon points="152.93,61.32 145.35,50.67 134.64,50.67 127.06,61.32 127.06,74.67 134.64,85.32 145.35,85.32 152.93,74.67" stroke-width="4" />
+    
+    <!-- South -->
+    <line x1="140" y1="170" x2="140" y2="207" stroke-width="8.5" />
+    <polygon points="127.06,218.67 134.64,229.32 145.35,229.32 152.93,218.67 152.93,205.32 145.35,194.67 134.64,194.67 127.06,205.32" stroke-width="4" />
+    
+    <!-- East -->
+    <line x1="170" y1="140" x2="207" y2="140" stroke-width="8.5" />
+    <polygon points="218.67,152.93 229.32,145.35 229.32,134.64 218.67,127.06 205.32,127.06 194.67,134.64 194.67,145.35 205.32,152.93" stroke-width="4" />
+    
+    <!-- West -->
+    <line x1="110" y1="140" x2="73" y2="140" stroke-width="8.5" />
+    <polygon points="61.32,127.06 50.67,134.64 50.67,145.35 61.32,152.93 74.67,152.93 85.32,145.35 85.32,134.64 74.67,127.06" stroke-width="4" />
+
+    <!-- Diagonals -->
+    <!-- NE -->
+    <line x1="161.2" y1="118.8" x2="191.6" y2="88.4" stroke-width="8.5" />
+    <polygon points="210.8,80.5 205.8,69.2 194.5,69.2 188.2,80.5 194.5,91.8 205.8,91.8" fill="#FFFFFF" stroke-width="2" />
+    
+    <!-- SE -->
+    <line x1="161.2" y1="161.2" x2="191.6" y2="191.6" stroke-width="8.5" />
+    <polygon points="199.5,210.8 210.8,205.8 210.8,194.5 199.5,188.2 188.2,194.5 188.2,205.8" fill="#FFFFFF" stroke-width="2" />
+    
+    <!-- SW -->
+    <line x1="118.8" y1="161.2" x2="88.4" y2="191.6" stroke-width="8.5" />
+    <polygon points="69.2,199.5 74.2,210.8 85.5,210.8 91.8,199.5 85.5,188.2 74.2,188.2" fill="#FFFFFF" stroke-width="2" />
+    
+    <!-- NW -->
+    <line x1="118.8" y1="118.8" x2="88.4" y2="88.4" stroke-width="8.5" />
+    <polygon points="80.5,69.2 69.2,74.2 69.2,85.5 80.5,91.8 91.8,85.5 91.8,74.2" fill="#FFFFFF" stroke-width="2" />
+  </g>
+</svg>
