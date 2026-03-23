@@ -108,15 +108,10 @@ export default function WhyUsSection() {
               transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
               className={`group relative rounded-[2rem] overflow-hidden flex flex-col justify-between p-8 md:p-10 ${feature.className} border border-white/10 ${
                 index % 2 === 0 ? 'bg-[#E85D34]' : 'bg-[#C83A22]'
-              } 
-                /* Mobile Stacking Logic — Strictly isolated from desktop */
-                sticky top-[var(--stack-top)] md:relative md:top-auto
+              }
               `}
               style={{ 
                 zIndex: index,
-                // Use a CSS variable to keep the dynamic calc out of the main 'top' style property
-                // This prevents it from overriding the Tailwind md:top-auto class on desktop
-                '--stack-top': `calc(120px + ${index * 24}px)`
               } as any}
             >
               {/* HEATMAP MESH GRADIENT — Alternating between Brand Orange and Deep Reddish Orange */}
